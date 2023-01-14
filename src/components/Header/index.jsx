@@ -1,14 +1,22 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+
+import { isSetAuth, logout } from '../../bi/services/auth';
+
 import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
 
 import styles from './Header.module.scss';
 
 export const Header = () => {
-  const isAuth = false;
+  const isAuth = useSelector(isSetAuth);
 
-  const onClickLogout = () => {};
+  const dispatch = useDispatch();
+
+  const onClickLogout = () => {
+    dispatch(logout());
+  };
 
   return (
     <div className={styles.root}>

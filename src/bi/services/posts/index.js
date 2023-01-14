@@ -1,27 +1,35 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
-import { instanceApi } from "../../api";
+import { instanceApi } from '../../api';
 
-const fetchPosts = createAsyncThunk('postsAndTags/fetchPosts', async () => {
-  const { data } = await instanceApi.get('/publications');
+import { ROUTES } from '../../constants/routes';
 
-  return data;
-});
+const fetchPosts = createAsyncThunk(
+  'postsAndTags/fetchPosts',
+  async () => {
+    const { data } = await instanceApi.get(ROUTES.PUBLICATIONS);
 
-const fetchTags = createAsyncThunk('postsAndTags/fetchTags', async () => {
-  const { data } = await instanceApi.get('/tags');
+    return data;
+  },
+);
 
-  return data;
-});  
+const fetchTags = createAsyncThunk(
+  'postsAndTags/fetchTags',
+  async () => {
+    const { data } = await instanceApi.get(ROUTES.TAGS);
+
+    return data;
+  },
+);
 
 const initialState = {
   posts: {
     items: [],
-    status: 'loading'
+    status: 'loading',
   },
   tags: {
     items: [],
-    status: 'loading'
+    status: 'loading',
   },
 };
 
@@ -57,6 +65,6 @@ const postsAndTagsSlice = createSlice({
   },
 });
 
-const postsAndTagsReducer =  postsAndTagsSlice.reducer;
+const postsAndTagsReducer = postsAndTagsSlice.reducer;
 
 export { postsAndTagsReducer, fetchPosts, fetchTags };

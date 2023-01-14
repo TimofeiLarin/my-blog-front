@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
+import { instanceApi } from '../bi/api';
+
+import { ROUTES } from '../bi/constants/routes';
+
 import { Post } from '../components/Post';
 import { Index } from '../components/AddComment';
 import { CommentsBlock } from '../components/CommentsBlock';
-import { instanceApi } from '../bi/api';
 
 export const FullPost = () => {
   const [post, setPost] = useState(null);
@@ -14,7 +17,7 @@ export const FullPost = () => {
 
   const fetchPost = async () => {
     setLoading(true);
-    const { data } = await instanceApi(`/publications/${id}`);
+    const { data } = await instanceApi(ROUTES.PUBLICATION(id));
     setPost(data);
     setLoading(false);
   };
