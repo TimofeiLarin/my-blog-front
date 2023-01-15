@@ -22,6 +22,12 @@ const fetchTags = createAsyncThunk(
   },
 );
 
+const fetchRemovePost = createAsyncThunk(
+  'postsAndTags/fetchRemovePost',
+  async (idPost) =>
+    await instanceApi.delete(ROUTES.PUBLICATION(idPost)),
+);
+
 const initialState = {
   posts: {
     items: [],
@@ -50,6 +56,7 @@ const postsAndTagsSlice = createSlice({
       state.posts.items = [];
       state.posts.status = 'error';
     },
+
     [fetchTags.pending]: (state) => {
       state.tags.items = [];
       state.tags.status = 'loading';
@@ -62,9 +69,25 @@ const postsAndTagsSlice = createSlice({
       state.tags.items = [];
       state.tags.status = 'error';
     },
+
+    [fetchRemovePost.fulfilled]: (state, action) => {
+      console.log('action', action, state.posts.items);
+      state.posts.items = state.posts.items.filter(
+        ({ _id }) => _id !== action.meta.arg,
+      );
+      state.posts.status = 'loaded';
+    },
+    [fetchRemovePost.rejected]: (state) => {
+      state.posts.status = 'error';
+    },
   },
 });
 
 const postsAndTagsReducer = postsAndTagsSlice.reducer;
 
-export { postsAndTagsReducer, fetchPosts, fetchTags };
+export {
+  postsAndTagsReducer,
+  fetchPosts,
+  fetchTags,
+  fetchRemovePost,
+};

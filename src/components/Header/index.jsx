@@ -16,6 +16,7 @@ export const Header = () => {
 
   const onClickLogout = () => {
     dispatch(logout());
+    window.localStorage.removeItem('tokenMyBlog');
   };
 
   return (

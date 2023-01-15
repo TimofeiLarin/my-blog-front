@@ -3,7 +3,7 @@ import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
-import { fetchAuth, isSetAuth } from '../../bi/services/auth';
+import { fetchLogin, isSetAuth } from '../../bi/services/auth';
 
 import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
@@ -15,14 +15,13 @@ import styles from './Login.module.scss';
 export const Login = () => {
   const navigate = useNavigate();
 
-  const isAuth = useSelector(isSetAuth)
+  const isAuth = useSelector(isSetAuth);
 
   const dispatch = useDispatch();
 
   const {
     register,
     handleSubmit,
-    setError,
     formState: { errors, isValid },
   } = useForm({
     defaultValues: {
@@ -32,7 +31,17 @@ export const Login = () => {
     mode: 'onChange',
   });
 
-  const onSubmit = (value) => dispatch(fetchAuth(value));
+  const onSubmit = async (value) => {
+    const data = await dispatch(fetchLogin(value));
+
+    if (!data.payload) {
+      return alert('Failed to login!');
+    }
+
+    console.log(data.payload);
+
+    return window.localStorage.setItem('tokenMyBlog', data.payload.token)
+  };
 
   if (isAuth) {
     return navigate('/');
@@ -45,23 +54,29 @@ export const Login = () => {
       </Typography>
       <form onSubmit={handleSubmit(onSubmit)}>
         <TextField
-          className={ styles.field }
+          className={styles.field}
           label='E-Mail'
-          error={ !!errors.email?.message }
-          helperText={ errors.email?.message }
+          error={!!errors.email?.message}
+          helperText={errors.email?.message}
           fullWidth
           type='email'
           {...register('email', { required: 'Укажите почту' })}
         />
         <TextField
-          className={ styles.field }
+          className={styles.field}
           label='Пароль'
           fullWidth
-          error={ !!errors.password?.message }
-          helperText={ errors.password?.message }
+          error={!!errors.password?.message}
+          helperText={errors.password?.message}
           {...register('password', { required: 'Укажите пароль' })}
         />
-        <Button type='submit' size='large' variant='contained' fullWidth>
+        <Button
+          type='submit'
+          size='large'
+          variant='contained'
+          fullWidth
+          disabled={ !isValid }
+        >
           Войти
         </Button>
       </form>

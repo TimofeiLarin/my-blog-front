@@ -13,7 +13,9 @@ import { CommentsBlock } from '../components/CommentsBlock';
 
 export const Home = () => {
   const dispatch = useDispatch();
+
   const { posts, tags } = useSelector((state) => state.postsAndTags);
+  const userData = useSelector((state) => state.auth.data);
 
   const isLoadingPost = posts.status === 'loading';
   const isLoadingTags = tags.status === 'loading';
@@ -22,6 +24,8 @@ export const Home = () => {
     dispatch(fetchPosts());
     dispatch(fetchTags());
   }, []);
+
+  const isCanEditableAndDelete = (id) => userData?._id === id;
 
   return (
     <>
@@ -44,13 +48,17 @@ export const Home = () => {
                   key={item._id}
                   id={item._id}
                   title={item.title}
-                  imageUrl={item?.imageUrl}
+                  imageUrl={
+                    item?.imageUrl
+                      ? `http://localhost:4444${item?.imageUrl}`
+                      : ''
+                  }
                   user={item.user}
                   createdAt={item.createdAt}
                   viewsCount={item.viewsCount}
                   commentsCount={3}
                   tags={item.tags}
-                  isEditable
+                  isEditable={isCanEditableAndDelete(item.user._id)}
                   isLoading={isLoadingPost}
                 />
               ),

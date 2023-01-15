@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import { ReactMarkdown } from 'react-markdown/lib/react-markdown';
 
 import { instanceApi } from '../bi/api';
 
@@ -34,7 +35,11 @@ export const FullPost = () => {
         key={post._id}
         id={post._id}
         title={post.title}
-        imageUrl={post?.imageUrl}
+        imageUrl={
+          post?.imageUrl
+            ? `http://localhost:4444${post?.imageUrl}`
+            : ''
+        }
         user={post.user}
         createdAt={post.createdAt}
         viewsCount={post.viewsCount}
@@ -42,7 +47,7 @@ export const FullPost = () => {
         tags={post.tags}
         isFullPost
       >
-        <p>{post.text}</p>
+        <ReactMarkdown children={post.text} />
       </Post>
       <CommentsBlock
         items={[
